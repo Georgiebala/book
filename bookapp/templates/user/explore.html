@@ -1,0 +1,87 @@
+{% extends "user/layout.html"%} 
+
+{% block content %} {% endblock %}
+
+{% block morecontent %}
+
+
+<div class="layout" id="partner">
+  <div class="container px-4" id="custom-cards">
+
+    <div class="row">
+        <div class="col">
+            <select  id="category" class="form-select border-primary">
+                <option value=""> Please Select</option>
+                {% for c in cats %}
+                <option >{{ c.cats_name}}</option>
+                {% endfor %}
+            </select> 
+        </div>
+        <div class="col">
+            <input type="text" id="title" class="form-control form-control-lg border-primary" placeholder="Type a keyword">
+        </div>
+        <div class="col">
+            <button class="btn btn-primary noround btn-lg col-12" id="btnsearch">search</button>
+        </div>
+
+    </div>
+    <h2 class="pb-2 border-bottom">Explore Available Books</h2>
+
+    <div class="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-5">
+      {% for b in books%}
+      <div class="col text-center">
+        <img
+          src="{{url_for('static',filename='collections/' +b.book_cover)}}"
+          class="img-fluid bk"
+          alt=""
+          height="100"
+        />
+
+        <div class="deets">
+          <h6>
+            <a href="/reviews/{{b.book_id}}">{{ b.book_title}}</a>The Day is
+            Bright
+          </h6>
+          <p><i>{{b.catdeets.cat_name}}</i></p>
+
+          <p>
+            <button class="btn btn-sm btn-warning">
+              {{b.bookreviews|count}} Reviews
+            </button>
+          </p>
+        </div>
+      </div>
+      {%endfor%}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block featured %} {% endblock %}
+
+
+{% block customjs %}
+
+<script type="/text/javascript"></script>
+<script src="\static\js\jquery.js">
+    $(document).ready(function(){
+        $("btnsearch").click(function(){
+            //retrieve the data
+            var cat = $('#category').val()
+            var title =$('#title').val()
+            //make ajax call
+            data2send = {"category":cat,"title":title}
+            $.ajax({
+                url:"/search/book",
+                data:data2send,
+                type:'get',
+                success:function(rsp){alert(rsp)},
+                error: function(err){console.log(err)}
+            })
+            
+        })
+    })
+
+</script>
+
+{% endblock %}
